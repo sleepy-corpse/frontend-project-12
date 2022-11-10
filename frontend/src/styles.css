@@ -1,0 +1,17 @@
+body {
+  background-color: #2e2e2e;
+}
+
+.my-header {
+  background-color: #5d00ffab
+}
+
+.my-form {
+  background-color: #b226844d;
+  width: 500px;
+}
+
+.my-main-button {
+  background-color: #5d00ffab;
+  width: 200px;
+}

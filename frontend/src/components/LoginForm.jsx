@@ -1,23 +1,74 @@
 import Button from 'react-bootstrap/Button';
-import React from 'react';
+import { React, useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+// import Card from 'react-bootstrap/Card';
+// import Row from 'react-bootstrap/Row';
+// import Col from 'react-bootstrap/Col';
+import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import 'bootstrap';
+import axios from 'axios';
+import routes from '../routes';
+// import 'bootstrap';
 
-export default function LoginForm() {
+/* <Card>
+        <Card.Body as={Row} className="p-4 border rounded-4 border-5 my-form">
+          <Col lg={12} />
+          <Col lg={12}>
+            <LoginForm />
+          </Col>
+        </Card.Body>
+        <Card.Footer>
+          <div className="mt-4 text-light text-center border-top mx-0">
+            <p className="mb-0 mt-3">
+              {'Don\'t have an account? '}
+              <a href="/signup">Sign Up</a>
+            </p>
+          </div>
+        </Card.Footer>
+      </Card>
+*/
+export default function FormContainer() {
+  return (
+    <Container
+      className="d-flex align-items-center justify-content-center"
+      style={{ height: '100vh' }}
+    >
+      <LoginForm />
+    </Container>
+  );
+}
+
+function LoginForm() {
+  const [isInvalid, setIsInvalid] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.user) {
+      navigate('/');
+    }
+  }, []);
+
   return (
     <Formik
       initialValues={{
-        login: '',
+        username: '',
         password: '',
       }}
       validationSchema={yup.object({
-        login: yup.string().min(3).max(20),
-        password: yup.string().min(6, 'Minimum length is 6 characters'),
+        username: yup.string().required(),
+        password: yup.string().required(),
       })}
-      onSubmit={(values) => {
-        alert(JSON.stringify(values, null, 2));
+      onSubmit={async (values) => {
+        setIsInvalid(false);
+        try {
+          const resp = await axios.post(routes.loginPath(), values);
+          window.localStorage.user = JSON.stringify(resp.data);
+          navigate('/');
+        } catch (error) {
+          setIsInvalid(true);
+        }
       }}
     >
       {(formik) => (
@@ -33,16 +84,15 @@ export default function LoginForm() {
           <Form.Group className="position-relative">
             <Form.Label className="fw-bold fs-4 fst-italic text-light">Username</Form.Label>
             <Form.Control
-              name="login"
-              value={formik.values.email}
+              name="username"
+              value={formik.values.username}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               type="text"
               placeholder="Enter email"
               required
-              isInvalid={formik.touched.login && formik.errors.login}
+              isInvalid={isInvalid}
             />
-            <Form.Control.Feedback tooltip type="invalid">{formik.errors.login}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mt-2 position-relative" controlId="validationFormik05" md="3">
             <Form.Label className="fw-bold fs-4 fst-italic text-light">Password</Form.Label>
@@ -54,19 +104,17 @@ export default function LoginForm() {
               type="password"
               placeholder="Enter password"
               required
-              isInvalid={formik.touched.password && formik.errors.password}
+              isInvalid={isInvalid}
             />
-            <Form.Control.Feedback tooltip type="invalid">{formik.errors.password}</Form.Control.Feedback>
+            <Form.Control.Feedback tooltip type="invalid">Invalid username or password</Form.Control.Feedback>
           </Form.Group>
-          <div className="d-flex justify-content-center">
-            <Button
-              className="mt-3 border-0 my-main-button"
-              type="submit"
-            >
-              Sign In
-            </Button>
-          </div>
-          <div className="mt-4 fs-5 text-light text-center border-top mx-0">
+          <Button
+            className="mt-4 border-0 my-main-button mx-0"
+            type="submit"
+          >
+            Sign In
+          </Button>
+          <div className="mt-4 text-light text-center border-top border-3 mx-0">
             <p className="mb-0 mt-3">
               {'Don\'t have an account? '}
               <a href="/signup">Sign Up</a>

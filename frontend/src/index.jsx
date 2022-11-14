@@ -6,9 +6,10 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from 'react-router-dom';
-import ErrorPage from './routes/error-page';
-import Root from './routes/root';
-import Login from './routes/login';
+import ErrorPage from './components/ErrorPage';
+import Root from './components/Root';
+import LoginForm from './components/LoginForm';
+import SignUpForm from './components/SignUpForm';
 
 const router = createBrowserRouter([
   {
@@ -17,8 +18,12 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        element: <Login />,
+        element: <LoginForm />,
         path: 'login',
+      },
+      {
+        element: <SignUpForm />,
+        path: 'signup',
       },
     ],
   },

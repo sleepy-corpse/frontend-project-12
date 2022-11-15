@@ -16,8 +16,8 @@ export default function SignUpForm() {
         login: yup.string().min(3).max(20),
         password: yup.string().min(6, 'Minimum length is 6 characters'),
       })}
-      onSubmit={(values) => {
-        alert(JSON.stringify(values, null, 2));
+      onSubmit={() => {
+
       }}
     >
       {(formik) => (

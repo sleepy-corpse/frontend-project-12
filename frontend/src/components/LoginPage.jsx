@@ -1,11 +1,11 @@
 import Button from 'react-bootstrap/Button';
-import { React, useState, useEffect } from 'react';
+import { React, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 // import Card from 'react-bootstrap/Card';
 // import Row from 'react-bootstrap/Row';
 // import Col from 'react-bootstrap/Col';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -29,13 +29,12 @@ import routes from '../routes';
         </Card.Footer>
       </Card>
 */
-export default function FormContainer() {
+export default function LoginPage() {
   return (
     <Container
-      className="d-flex align-items-center justify-content-center"
-      style={{ height: '100vh' }}
+      className="d-flex align-items-center justify-content-center h-100"
     >
-      <LoginForm />
+      {localStorage.user ? <Navigate to="/" /> : <LoginForm />}
     </Container>
   );
 }
@@ -43,12 +42,6 @@ export default function FormContainer() {
 function LoginForm() {
   const [isInvalid, setIsInvalid] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (localStorage.user) {
-      navigate('/');
-    }
-  }, []);
 
   return (
     <Formik

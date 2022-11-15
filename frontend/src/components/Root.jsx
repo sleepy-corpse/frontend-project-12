@@ -5,6 +5,8 @@ import {
   useEffect,
 } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
+import Navbar from 'react-bootstrap/Navbar';
+// import Container from 'react-bootstrap/Container';
 import AuthContext from '../contexts';
 
 function Root() {
@@ -25,16 +27,12 @@ function Root() {
 
   return (
     <AuthContext.Provider value={context}>
-      <header className="fixed-top border-bottom border-3 py-2 my-header fst-italic fw-bold">
-        <a href="/" className="fs-4 text-decoration-none text-light">
-          <span className="ms-3">
-            Smack
-          </span>
-        </a>
-      </header>
-      <main>
-        <Outlet />
-      </main>
+      <Navbar className="border-bottom border-3 my-header fst-italic fw-bold">
+        <Navbar.Brand href="/" className="fs-4 text-light ms-3 ">
+          Smack
+        </Navbar.Brand>
+      </Navbar>
+      <Outlet />
     </AuthContext.Provider>
   );
 }

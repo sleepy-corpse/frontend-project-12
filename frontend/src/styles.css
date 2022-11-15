@@ -6,6 +6,28 @@ body {
   background-color: #5d00ffab
 }
 
+.my-channel-header {
+  background-color: #662f89;
+}
+
+.my-bg-main {
+  background-color: #57336e;
+}
+
+.my-icon-btn:active {
+  border-color: #00000000 !important;
+  background-color: #5d00ffab !important;
+  box-shadow: 0 0 0.2rem 0.3rem #5d00ffab;
+}
+
+.my-shadow {
+  box-shadow: 0 0 3rem 2rem #381772;
+}
+
+.my-bg-sidebar {
+  background-color: #444345;
+}
+
 .my-form {
   background-color: #b226844d;
   width: 500px;

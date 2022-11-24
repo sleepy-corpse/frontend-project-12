@@ -5,26 +5,89 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { io } from 'socket.io-client';
-import { fetchInitialData, selectors as channelsSelectors } from '../slices/channelsSlice';
-import { actions as messagesActions, selectors as messagesSelectors } from '../slices/messagesSlice';
+import { actions as channelsActions, selectors as channelsSelectors } from '../slices/channelsSlice';
+import { selectors as messagesSelectors } from '../slices/messagesSlice';
+import { actions as modalActions } from '../slices/modalSlice';
+import { useSocket } from '../hooks';
 
-function Channels(props) {
+function Channels() {
+  const dispatch = useDispatch();
   const channels = useSelector(channelsSelectors.selectEntities);
-  const { socket } = props;
-  const emitMsg = () => {
-    socket.emit('newMessage', { body: 'hello', username: 'Me' });
+  const selectedChannelId = useSelector((state) => state.channels.selectedChannelId);
+  const addChannel = () => {
+    dispatch(modalActions.openModal({ type: 'addChannel' }));
   };
 
+  const renameChannel = (id) => {
+    dispatch(modalActions.openModal({
+      type: 'renameChannel',
+      extra: {
+        channelId: id,
+      },
+    }));
+  };
+
+  const removeChannel = (id) => {
+    dispatch(modalActions.openModal({
+      type: 'removeChannel',
+      extra: {
+        channelId: id,
+      },
+    }));
+  };
+
+  const handleChannelSwitch = (id) => () => {
+    dispatch(channelsActions.switchChannel(id));
+  };
+
+  const renderDropdown = (channel) => (
+    <Dropdown as={ButtonGroup} className="d-flex">
+      <Button
+        variant={channel.id === selectedChannelId ? 'secondary' : ''}
+        className="w-100 text-light text-truncate rounded-0 text-start"
+        onClick={handleChannelSwitch(channel.id)}
+      >
+        <span className="me-1">
+          #
+        </span>
+        {channel.name}
+      </Button>
+      <Dropdown.Toggle
+        split
+        variant={channel.id === selectedChannelId ? 'secondary' : ''}
+        className="text-light"
+      />
+      <Dropdown.Menu className="super-colors">
+        <Dropdown.Item onClick={() => renameChannel(channel.id)}>Rename</Dropdown.Item>
+        <Dropdown.Item onClick={() => removeChannel(channel.id)}>Delete</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+
+  const renderButton = (channel) => (
+    <Button
+      variant={channel.id === selectedChannelId ? 'secondary' : ''}
+      className="w-100 text-light text-truncate rounded-0 text-start"
+      onClick={handleChannelSwitch(channel.id)}
+    >
+      <span className="me-1">
+        #
+      </span>
+      {channel.name}
+    </Button>
+  );
+
   return (
-    <Col xs={4} md={2} className="my-bg-sidebar pt-5 px-0 border-end border-3">
+    <Col xs={4} md={2} className="my-bg-sidebar pt-5 px-0 border-end border-3 h-100 overflow-y-auto">
       <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
         <span>channels</span>
-        <button type="button" onClick={emitMsg} className="my-icon-btn text-light btn btn-group-vertical p-0">
+        <button type="button" onClick={addChannel} className="my-icon-btn text-light btn btn-group-vertical p-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -44,13 +107,8 @@ function Channels(props) {
       </div>
       <Nav as="ul" variant="px-2 flex-column" fill>
         {Object.values(channels).map((channel) => (
-          <Nav.Item as="li" key={channel.id}>
-            <Button variant={channel.isSelected ? 'secondary' : 'outline-secondary border-0'} className="rounded-0 w-100 text-start text-light">
-              <span className="me-1">
-                #
-              </span>
-              {channel.name}
-            </Button>
+          <Nav.Item as="li" key={channel.id} className="w-100">
+            {channel.removable ? renderDropdown(channel) : renderButton(channel)}
           </Nav.Item>
         ))}
       </Nav>
@@ -58,35 +116,40 @@ function Channels(props) {
   );
 }
 
-function Messages(props) {
+function Messages() {
   const messages = useSelector(messagesSelectors.selectEntities);
-  const { socket } = props;
+  const selectedChannelId = useSelector((state) => state.channels.selectedChannelId);
+  const selectedChannel = useSelector(channelsSelectors.selectEntities)[selectedChannelId];
+
+  const socket = useSocket();
   const messagesBox = useRef(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     messagesBox.current.scrollTop = messagesBox.current.scrollHeight;
   }, [messages]);
 
-  socket.on('newMessage', (message) => {
-    dispatch(messagesActions.addMessage(message));
-  });
-
   return (
     <Col className="my-bg-main d-flex flex-column p-0 h-100">
       <div className="mb-4 p-3 shadow my-channel-header">
-        <p className="m-0"># channel-name</p>
+        <p className="m-0">
+          #
+          <span>
+            {selectedChannel.name}
+          </span>
+        </p>
         <span>message count</span>
       </div>
       <div ref={messagesBox} id="messages-box" className="chat-messages h-100 overflow-auto px-5 ">
-        {Object.values(messages).map((msg) => (
-          <div className="text-break mb-2" key={msg.id}>
-            <b>
-              {msg.username}
-            </b>
-            {`: ${msg.body}`}
-          </div>
-        ))}
+        {Object.values(messages)
+          .filter(({ channelId }) => channelId === selectedChannelId)
+          .map((msg) => (
+            <div className="text-break mb-2" key={msg.id}>
+              <b>
+                {msg.username}
+              </b>
+              {`: ${msg.body}`}
+            </div>
+          ))}
       </div>
       <Formik
         initialValues={{
@@ -95,12 +158,16 @@ function Messages(props) {
         validationSchema={yup.object({
           messageBody: yup.string().required(),
         })}
-        onSubmit={(values, { resetForm }) => {
-          socket.emit('newMessage', {
+        onSubmit={(values, { resetForm, setSubmitting }) => {
+          setSubmitting(true);
+          socket.addNewMessage({
+            channelId: selectedChannelId,
             body: values.messageBody,
             username: JSON.parse(localStorage.getItem('user')).username,
+          }, () => {
+            resetForm();
+            setSubmitting(false);
           });
-          resetForm();
         }}
       >
         {(formik) => (
@@ -109,7 +176,7 @@ function Messages(props) {
             onSubmit={formik.handleSubmit}
           >
             <Row>
-              <Col xs={10}>
+              <Col xs={12} md={10} className="mb-1">
                 <Form.Control
                   name="messageBody"
                   value={formik.values.messageBody}
@@ -117,12 +184,14 @@ function Messages(props) {
                   onBlur={formik.handleBlur}
                   type="text"
                   placeholder="Enter message"
+                  disabled={formik.isSubmitting}
                 />
               </Col>
               <Col>
                 <Button
                   className="border-0 my-main-button"
                   type="submit"
+                  disabled={formik.isSubmitting}
                 >
                   Send
                 </Button>
@@ -136,18 +205,18 @@ function Messages(props) {
 }
 
 export default function Chat() {
-  const dispatch = useDispatch();
-
-  const socket = io();
-
-  useEffect(() => {
-    dispatch(fetchInitialData());
-  }, []);
+  const selectedChannelId = useSelector((state) => state.channels.selectedChannelId);
   return (
     <Container className="my-shadow h-100 my-4 overflow-hidden text-light rounded-4">
       <Row className="h-100">
-        <Channels socket={socket} />
-        <Messages socket={socket} />
+        {selectedChannelId
+          ? (
+            <>
+              <Channels />
+              <Messages />
+            </>
+          )
+          : null}
       </Row>
     </Container>
   );

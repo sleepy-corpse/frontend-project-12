@@ -23,21 +23,29 @@ const slice = createSlice({
   name: 'channels',
   initialState: { channels: channelsAdapter.getInitialState(), selectedChannelId: null },
   reducers: {
-
+    switchChannel: (state, { payload }) => {
+      state.selectedChannelId = payload;
+    },
+    addChannel: (state, { payload }) => {
+      channelsAdapter.addOne(state.channels, payload);
+      state.selectedChannelId = payload.id;
+    },
+    renameChannel: (state, { payload }) => {
+      channelsAdapter.updateOne(state.channels, { id: payload.id, changes: payload });
+    },
+    removeChannel: (state, { payload }) => {
+      channelsAdapter.removeOne(state.channels, payload.id);
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchInitialData.fulfilled, (state, { payload }) => {
-        const channels = payload.channels.map((chnl) => ({
-          ...chnl,
-          isSelected: payload.currentChannelId === chnl.id,
-        }));
-        console.log(channels);
-        channelsAdapter.addMany(state.channels, channels);
+        state.selectedChannelId = payload.currentChannelId;
+        channelsAdapter.addMany(state.channels, payload.channels);
       });
   },
 });
 
-// export const { actions } = slice;
+export const { actions } = slice;
 export const selectors = channelsAdapter.getSelectors((state) => state.channels.channels);
 export default slice.reducer;

@@ -33,6 +33,18 @@ body {
   width: 500px;
 }
 
+.my-submit-button {
+  background-color: #5d00ffab;
+}
+
+.my-submit-button:hover {
+  background-color: #a300a9;
+}
+
+.my-submit-button:active {
+  background-color: #5f0062 !important;
+}
+
 .my-main-button {
   background-color: #5d00ffab;
   width: 100%;

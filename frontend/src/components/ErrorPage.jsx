@@ -5,7 +5,7 @@ export default function ErrorPage() {
   const error = useRouteError();
 
   return (
-    <div id="error-page">
+    <div id="error-page" className="text-light">
       <h1>:(</h1>
       <h3>Ошибочка вышла</h3>
       <p>

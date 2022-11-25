@@ -11,7 +11,7 @@ import { io } from 'socket.io-client';
 import ErrorPage from './components/ErrorPage';
 import Root from './components/Root';
 import LoginPage from './components/LoginPage';
-import SignUpForm from './components/SignUpForm';
+import SignUpPage from './components/SignUpPage';
 import Chat from './components/Chat';
 import store from './slices/index';
 import { actions as channelsActions } from './slices/channelsSlice';
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         path: 'login',
       },
       {
-        element: <SignUpForm />,
+        element: <SignUpPage />,
         path: 'signup',
       },
       {

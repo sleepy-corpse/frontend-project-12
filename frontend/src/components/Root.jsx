@@ -2,19 +2,17 @@ import {
   React,
   useState,
   useMemo,
-  useEffect,
 } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
-import { useDispatch } from 'react-redux';
+import Button from 'react-bootstrap/Button';
 import { AuthContext } from '../contexts';
 import AddChannelModal from './modals/AddChannel';
 import RenameChannelModal from './modals/RenameChannel';
 import RemoveChannelModal from './modals/RemoveChannel';
-import { fetchInitialData } from '../slices/channelsSlice';
 
 function Root() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(!!localStorage.user);
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
     localStorage.removeItem('user');
@@ -22,21 +20,25 @@ function Root() {
   };
   const authContext = useMemo(() => ({ isLoggedIn, logIn, logOut }), [isLoggedIn]);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchInitialData());
-    if (!localStorage.user) {
-      navigate('/login');
-    }
-  }, []);
+  const vdom = (
+    <Button
+      className="me-3"
+      onClick={() => {
+        logOut();
+        navigate('/login');
+      }}
+    >
+      Log Out
+    </Button>
+  );
 
   return (
     <AuthContext.Provider value={authContext}>
-      <Navbar className="border-bottom border-3 my-header fst-italic fw-bold">
+      <Navbar className="border-bottom border-3 my-header fst-italic fw-bold justify-content-between">
         <Navbar.Brand href="/" className="fs-4 text-light ms-3 ">
-          Smack
+          Hexlet Chat
         </Navbar.Brand>
+        {isLoggedIn ? vdom : null}
       </Navbar>
       <Outlet />
       <AddChannelModal />

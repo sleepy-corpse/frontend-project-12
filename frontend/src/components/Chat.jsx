@@ -11,10 +11,11 @@ import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { actions as channelsActions, selectors as channelsSelectors } from '../slices/channelsSlice';
+import { useNavigate } from 'react-router-dom';
+import { actions as channelsActions, fetchInitialData, selectors as channelsSelectors } from '../slices/channelsSlice';
 import { selectors as messagesSelectors } from '../slices/messagesSlice';
 import { actions as modalActions } from '../slices/modalSlice';
-import { useSocket } from '../hooks';
+import { useAuth, useSocket } from '../hooks';
 
 function Channels() {
   const dispatch = useDispatch();
@@ -206,6 +207,16 @@ function Messages() {
 
 export default function Chat() {
   const selectedChannelId = useSelector((state) => state.channels.selectedChannelId);
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchInitialData());
+    } else {
+      navigate('/login');
+    }
+  }, []);
   return (
     <Container className="my-shadow h-100 my-4 overflow-hidden text-light rounded-4">
       <Row className="h-100">

@@ -5,11 +5,12 @@ import Container from 'react-bootstrap/Container';
 // import Card from 'react-bootstrap/Card';
 // import Row from 'react-bootstrap/Row';
 // import Col from 'react-bootstrap/Col';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import routes from '../routes';
+import { useAuth } from '../hooks';
 // import 'bootstrap';
 
 /* <Card>
@@ -30,18 +31,20 @@ import routes from '../routes';
       </Card>
 */
 export default function LoginPage() {
+  const { isLoggedIn } = useAuth();
   return (
     <Container
       className="d-flex align-items-center justify-content-center h-100"
     >
-      {localStorage.user ? <Navigate to="/" /> : <LoginForm />}
+      {isLoggedIn ? <Navigate to="/" /> : <LoginForm />}
     </Container>
   );
 }
 
 function LoginForm() {
   const [isInvalid, setIsInvalid] = useState(false);
-  const navigate = useNavigate();
+  const { logIn } = useAuth();
+  // const navigate = useNavigate();
 
   return (
     <Formik
@@ -58,7 +61,8 @@ function LoginForm() {
         try {
           const resp = await axios.post(routes.loginPath(), values);
           window.localStorage.user = JSON.stringify(resp.data);
-          navigate('/');
+          logIn();
+          // navigate('/');
         } catch (error) {
           setIsInvalid(true);
         }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -10,6 +11,7 @@ import { useSocket } from '../../hooks';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 
 function AddChannelModal() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const socket = useSocket();
   const modal = useSelector((state) => state.modal);
@@ -29,7 +31,7 @@ function AddChannelModal() {
         className=""
       >
         <span className="fw-bold fs-4 fst-italic">
-          Add a channel
+          {t('modals.add.header')}
         </span>
       </Modal.Header>
       <Modal.Body>
@@ -39,10 +41,10 @@ function AddChannelModal() {
           initialValues={{ channelName: '' }}
           validationSchema={yup.object({
             channelName: yup.string()
-              .required('The name is required')
-              .min(3, 'The name has to be 3-20 characters long')
-              .max(20, 'The name has to be 3-20 characters long')
-              .notOneOf(channelsNames, 'The name must be unique'),
+              .required(t('modals.errors.nameRequired'))
+              .min(3, t('modals.errors.nameLength'))
+              .max(20, t('modals.errors.nameLength'))
+              .notOneOf(channelsNames, t('modals.errors.nameUnique')),
           })}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
@@ -57,7 +59,7 @@ function AddChannelModal() {
             <Form onSubmit={formik.handleSubmit}>
               <Form.Group>
                 <Form.Label visuallyHidden>
-                  Channel Name
+                  {t('modals.add.label')}
                 </Form.Label>
                 <Form.Control
                   autoFocus
@@ -66,7 +68,7 @@ function AddChannelModal() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   type="text"
-                  placeholder="Enter channel name"
+                  placeholder={t('modals.add.inputPlaceholder')}
                   disabled={formik.isSubmitting}
                   isInvalid={!formik.isValid}
                 />
@@ -82,14 +84,14 @@ function AddChannelModal() {
                   variant="secondary"
                   onClick={() => dispatch(modalActions.closeModal())}
                 >
-                  Cancel
+                  {t('modals.buttons.cancel')}
                 </Button>
                 <Button
                   type="submit"
                   disabled={formik.isSubmitting}
                   className="border-0 my-submit-button"
                 >
-                  Submit
+                  {t('modals.buttons.submit')}
                 </Button>
               </Form.Group>
             </Form>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -7,6 +8,7 @@ import { actions as modalActions } from '../../slices/modalSlice';
 import { useSocket } from '../../hooks';
 
 function RemoveChannelModal() {
+  const { t } = useTranslation();
   const [isSubmitting, setSubmitting] = useState(false);
   const dispatch = useDispatch();
   const socket = useSocket();
@@ -25,7 +27,7 @@ function RemoveChannelModal() {
         closeVariant="white"
       >
         <span className="fw-bold fs-4 fst-italic">
-          Remove the channel
+          {t('modals.remove.header')}
         </span>
       </Modal.Header>
       <Modal.Body>
@@ -39,7 +41,7 @@ function RemoveChannelModal() {
         }}
         >
           <p className="text-light fs-5 mb-4">
-            Are you sure?
+            {t('modals.remove.modalText')}
           </p>
           <Form.Group className="d-flex mt-2 justify-content-end">
             <Button
@@ -50,14 +52,14 @@ function RemoveChannelModal() {
               variant="secondary"
               onClick={() => dispatch(modalActions.closeModal())}
             >
-              Cancel
+              {t('modals.buttons.cancel')}
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
               className="border-0 btn-danger"
             >
-              Delete
+              {t('modals.buttons.delete')}
             </Button>
           </Form.Group>
         </Form>

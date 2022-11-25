@@ -1,35 +1,15 @@
-import Button from 'react-bootstrap/Button';
 import { React, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-// import Card from 'react-bootstrap/Card';
-// import Row from 'react-bootstrap/Row';
-// import Col from 'react-bootstrap/Col';
 import { Navigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import routes from '../routes';
 import { useAuth } from '../hooks';
-// import 'bootstrap';
 
-/* <Card>
-        <Card.Body as={Row} className="p-4 border rounded-4 border-5 my-form">
-          <Col lg={12} />
-          <Col lg={12}>
-            <LoginForm />
-          </Col>
-        </Card.Body>
-        <Card.Footer>
-          <div className="mt-4 text-light text-center border-top mx-0">
-            <p className="mb-0 mt-3">
-              {'Don\'t have an account? '}
-              <a href="/signup">Sign Up</a>
-            </p>
-          </div>
-        </Card.Footer>
-      </Card>
-*/
 export default function LoginPage() {
   const { isLoggedIn } = useAuth();
   return (
@@ -42,9 +22,9 @@ export default function LoginPage() {
 }
 
 function LoginForm() {
+  const { t } = useTranslation();
   const [isInvalid, setIsInvalid] = useState(false);
   const { logIn } = useAuth();
-  // const navigate = useNavigate();
 
   return (
     <Formik
@@ -62,7 +42,6 @@ function LoginForm() {
           const resp = await axios.post(routes.loginPath(), values);
           window.localStorage.user = JSON.stringify(resp.data);
           logIn();
-          // navigate('/');
         } catch (error) {
           setIsInvalid(true);
         }
@@ -76,45 +55,45 @@ function LoginForm() {
           <div
             className="fw-bold fst-italic text-light text-end fs-2 border-bottom"
           >
-            Please login
+            {t('loginPage.header')}
           </div>
           <Form.Group className="position-relative">
-            <Form.Label className="fw-bold fs-4 fst-italic text-light">Username</Form.Label>
+            <Form.Label className="fw-bold fs-4 fst-italic text-light">{t('loginPage.username')}</Form.Label>
             <Form.Control
               name="username"
               value={formik.values.username}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               type="text"
-              placeholder="Enter email"
+              placeholder={t('loginPage.usernamePlaceholder')}
               required
               isInvalid={isInvalid}
             />
           </Form.Group>
           <Form.Group className="mt-2 position-relative" controlId="validationFormik05" md="3">
-            <Form.Label className="fw-bold fs-4 fst-italic text-light">Password</Form.Label>
+            <Form.Label className="fw-bold fs-4 fst-italic text-light">{t('loginPage.password')}</Form.Label>
             <Form.Control
               name="password"
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               type="password"
-              placeholder="Enter password"
+              placeholder={t('loginPage.passwordPlaceholder')}
               required
               isInvalid={isInvalid}
             />
-            <Form.Control.Feedback tooltip type="invalid">Invalid username or password</Form.Control.Feedback>
+            <Form.Control.Feedback tooltip type="invalid">{t('loginPage.error')}</Form.Control.Feedback>
           </Form.Group>
           <Button
             className="mt-4 border-0 my-main-button mx-0"
             type="submit"
           >
-            Sign In
+            {t('loginPage.signInBtn')}
           </Button>
           <div className="mt-4 text-light text-center border-top border-3 mx-0">
             <p className="mb-0 mt-3">
-              {'Don\'t have an account? '}
-              <a href="/signup">Sign Up</a>
+              {t('loginPage.signUpText')}
+              <a href="/signup">{t('loginPage.signUpLink')}</a>
             </p>
           </div>
         </Form>

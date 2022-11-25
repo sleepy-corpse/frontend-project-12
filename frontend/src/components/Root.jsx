@@ -4,6 +4,7 @@ import {
   useMemo,
 } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import { AuthContext } from '../contexts';
@@ -12,6 +13,7 @@ import RenameChannelModal from './modals/RenameChannel';
 import RemoveChannelModal from './modals/RemoveChannel';
 
 function Root() {
+  const { t } = useTranslation();
   const [isLoggedIn, setLoggedIn] = useState(!!localStorage.user);
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
@@ -28,7 +30,7 @@ function Root() {
         navigate('/login');
       }}
     >
-      Log Out
+      {t('chat.logOutBtn')}
     </Button>
   );
 

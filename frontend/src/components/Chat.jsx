@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { React, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/Row';
@@ -18,6 +19,7 @@ import { actions as modalActions } from '../slices/modalSlice';
 import { useAuth, useSocket } from '../hooks';
 
 function Channels() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const channels = useSelector(channelsSelectors.selectEntities);
   const selectedChannelId = useSelector((state) => state.channels.selectedChannelId);
@@ -55,7 +57,7 @@ function Channels() {
         onClick={handleChannelSwitch(channel.id)}
       >
         <span className="me-1">
-          #
+          {'# '}
         </span>
         {channel.name}
       </Button>
@@ -65,8 +67,8 @@ function Channels() {
         className="text-light"
       />
       <Dropdown.Menu className="super-colors">
-        <Dropdown.Item onClick={() => renameChannel(channel.id)}>Rename</Dropdown.Item>
-        <Dropdown.Item onClick={() => removeChannel(channel.id)}>Delete</Dropdown.Item>
+        <Dropdown.Item onClick={() => renameChannel(channel.id)}>{t('chat.dropdown.rename')}</Dropdown.Item>
+        <Dropdown.Item onClick={() => removeChannel(channel.id)}>{t('chat.dropdown.delete')}</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );
@@ -78,16 +80,16 @@ function Channels() {
       onClick={handleChannelSwitch(channel.id)}
     >
       <span className="me-1">
-        #
+        {'# '}
       </span>
       {channel.name}
     </Button>
   );
 
   return (
-    <Col xs={4} md={2} className="my-bg-sidebar pt-5 px-0 border-end border-3 h-100 overflow-y-auto">
-      <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-        <span>channels</span>
+    <Col xs={4} md={2} className="my-bg-sidebar px-0 border-end border-3 h-100 overflow-y-auto">
+      <div className="d-flex justify-content-between pt-5 pb-2 ps-4 pe-2">
+        <span className="fst-italic fw-bold">{t('chat.channelsHeader')}</span>
         <button type="button" onClick={addChannel} className="my-icon-btn text-light btn btn-group-vertical p-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -118,6 +120,7 @@ function Channels() {
 }
 
 function Messages() {
+  const { t } = useTranslation();
   const messages = useSelector(messagesSelectors.selectEntities);
   const selectedChannelId = useSelector((state) => state.channels.selectedChannelId);
   const selectedChannel = useSelector(channelsSelectors.selectEntities)[selectedChannelId];
@@ -133,12 +136,18 @@ function Messages() {
     <Col className="my-bg-main d-flex flex-column p-0 h-100">
       <div className="mb-4 p-3 shadow my-channel-header">
         <p className="m-0">
-          #
+          {'# '}
           <span>
             {selectedChannel.name}
           </span>
         </p>
-        <span>message count</span>
+        <span>
+          {t('chat.messagesCount', {
+            count: Object.values(messages)
+              .filter(({ channelId }) => channelId === selectedChannelId)
+              .length,
+          })}
+        </span>
       </div>
       <div ref={messagesBox} id="messages-box" className="chat-messages h-100 overflow-auto px-5 ">
         {Object.values(messages)
@@ -184,7 +193,7 @@ function Messages() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   type="text"
-                  placeholder="Enter message"
+                  placeholder={t('chat.messageInputPlaceholder')}
                   disabled={formik.isSubmitting}
                 />
               </Col>
@@ -194,7 +203,7 @@ function Messages() {
                   type="submit"
                   disabled={formik.isSubmitting}
                 >
-                  Send
+                  {t('chat.sendBtn')}
                 </Button>
               </Col>
             </Row>

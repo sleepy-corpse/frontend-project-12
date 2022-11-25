@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -22,6 +23,7 @@ export default function SignUpPage() {
 }
 
 function SignUpForm() {
+  const { t } = useTranslation();
   const { logIn } = useAuth();
   const [serverError, setServerError] = useState('');
   return (
@@ -33,10 +35,10 @@ function SignUpForm() {
       }}
       validationSchema={yup.object({
         login: yup.string()
-          .min(3, 'Username must be 3-20 characters long')
-          .max(20, 'Username must be 3-20 characters long'),
-        password: yup.string().min(6, 'Password must be at least 6 characters long'),
-        confirmPassword: yup.string().oneOf([yup.ref('password')], 'Passwords must match'),
+          .min(3, t('signUpPage.errors.usernameLength'))
+          .max(20, t('signUpPage.errors.usernameLength')),
+        password: yup.string().min(6, t('signUpPage.errors.passwordLength')),
+        confirmPassword: yup.string().oneOf([yup.ref('password')], t('signUpPage.errors.passwordConfirm')),
       })}
       onSubmit={async ({ login, password }) => {
         setServerError('');
@@ -46,7 +48,7 @@ function SignUpForm() {
           logIn();
         } catch (e) {
           if (e.isAxiosError) {
-            setServerError('User already exists');
+            setServerError(t('signUpPage.errors.usernameUnique'));
           }
         }
       }}
@@ -59,45 +61,45 @@ function SignUpForm() {
           <div
             className="fw-bold fst-italic text-light text-end fs-2 border-bottom"
           >
-            Registration
+            {t('signUpPage.header')}
           </div>
           <Form.Group className="position-relative">
-            <Form.Label className="fw-bold fs-5 fst-italic text-light">Username</Form.Label>
+            <Form.Label className="fw-bold fs-5 fst-italic text-light">{t('signUpPage.username')}</Form.Label>
             <Form.Control
               name="login"
               value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               type="text"
-              placeholder="Enter email"
+              placeholder={t('signUpPage.usernamePlaceholder')}
               required
               isInvalid={(formik.touched.login && formik.errors.login) || serverError}
             />
             <Form.Control.Feedback tooltip type="invalid">{formik.errors.login || serverError}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mt-2 position-relative">
-            <Form.Label className="fw-bold fs-5 fst-italic text-light">Password</Form.Label>
+            <Form.Label className="fw-bold fs-5 fst-italic text-light">{t('signUpPage.password')}</Form.Label>
             <Form.Control
               name="password"
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               type="password"
-              placeholder="Enter password"
+              placeholder={t('signUpPage.passwordPlaceholder')}
               required
               isInvalid={formik.touched.password && formik.errors.password}
             />
             <Form.Control.Feedback tooltip type="invalid">{formik.errors.password}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mt-2 position-relative">
-            <Form.Label className="fw-bold fs-5 fst-italic text-light">Confirm Password</Form.Label>
+            <Form.Label className="fw-bold fs-5 fst-italic text-light">{t('signUpPage.confirmPassword')}</Form.Label>
             <Form.Control
               name="confirmPassword"
               value={formik.values.confirmPassword}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               type="password"
-              placeholder="Confirm password"
+              placeholder={t('signUpPage.confirmPlaceholder')}
               required
               isInvalid={formik.touched.confirmPassword && formik.errors.confirmPassword}
             />
@@ -108,14 +110,8 @@ function SignUpForm() {
               className="mt-3 border-0 my-main-button"
               type="submit"
             >
-              Sign Up
+              {t('signUpPage.signUpBtn')}
             </Button>
-          </div>
-          <div className="mt-4 fs-6 text-light text-center border-top mx-0">
-            <p className="mb-0 mt-3">
-              {'Already have an account? '}
-              <a href="/login">Sign In</a>
-            </p>
           </div>
         </Form>
       )}

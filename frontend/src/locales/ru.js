@@ -59,11 +59,11 @@ export default {
     signUpPage: {
       header: 'Регистрация',
       username: 'Имя пользователя',
-      usernamePlaceholder: 'Введите имя пользователя',
+      usernamePlaceholder: 'Имя пользователя',
       password: 'Пароль',
-      passwordPlaceholder: 'введите пароль',
+      passwordPlaceholder: 'Пароль',
       confirmPassword: 'Подтвердите пароль',
-      confirmPlaceholder: 'Введите пароль ещё раз',
+      confirmPlaceholder: 'Подтвердите пароль',
       signUpBtn: 'Зарегистрироваться',
       errors: {
         usernameLength: 'От 3 до 20 символов',

@@ -24,7 +24,7 @@ export default {
     modals: {
       rename: {
         header: 'Переименовать канал',
-        label: 'Название канала',
+        label: 'Имя канала',
         inputPlaceholder: 'Введите название канала',
       },
       remove: {

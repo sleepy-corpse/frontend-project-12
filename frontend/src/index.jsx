@@ -3,6 +3,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import './styles.css';
 import { Provider } from 'react-redux';
 import React from 'react';
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import { ToastContainer } from 'react-toastify';
 import ReactDOM from 'react-dom/client';
 import {
@@ -83,20 +84,31 @@ i18n
     lng: 'ru',
   });
 
+const rollbarConfig = {
+  accessToken: '236e6ae97b1a476ab11467917dd9df5c',
+  environment: 'production',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+};
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Provider store={store}>
-    <SocketContext.Provider value={{
-      addNewChannel,
-      renameChannel,
-      removeChannel,
-      addNewMessage,
-    }}
-    >
-      <FilterContext.Provider value={filter}>
-        <RouterProvider router={router} />
-        <ToastContainer />
-      </FilterContext.Provider>
-    </SocketContext.Provider>
-  </Provider>,
+  <RollbarProvider config={rollbarConfig}>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <SocketContext.Provider value={{
+          addNewChannel,
+          renameChannel,
+          removeChannel,
+          addNewMessage,
+        }}
+        >
+          <FilterContext.Provider value={filter}>
+            <RouterProvider router={router} />
+            <ToastContainer />
+          </FilterContext.Provider>
+        </SocketContext.Provider>
+      </Provider>
+    </ErrorBoundary>
+  </RollbarProvider>,
 );

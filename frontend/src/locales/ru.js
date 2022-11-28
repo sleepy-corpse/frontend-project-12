@@ -4,7 +4,7 @@ export default {
       addChannel: 'Канал создан',
       renameChannel: 'Канал переименован',
       removeChannel: 'Канал удален',
-      networkError: 'Ошибка сети',
+      networkError: 'Ошибка соединения',
     },
     chat: {
       channelsHeader: 'Каналы',
@@ -46,8 +46,8 @@ export default {
       },
     },
     loginPage: {
-      header: 'Авторизация',
-      username: 'Имя пользователя',
+      header: 'Войти',
+      username: 'Ваш ник',
       usernamePlaceholder: 'Введите имя пользователя',
       password: 'Пароль',
       passwordPlaceholder: 'введите пароль',
@@ -68,7 +68,7 @@ export default {
       errors: {
         usernameLength: 'От 3 до 20 символов',
         usernameUnique: 'Пользователь уже существует',
-        passwordLength: 'Минимум 6 символов',
+        passwordLength: 'Не менее 6 символов',
         passwordConfirm: 'Пароли должны совпадать',
       },
     },

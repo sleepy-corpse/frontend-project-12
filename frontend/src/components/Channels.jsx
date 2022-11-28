@@ -92,6 +92,9 @@ export default function Channels() {
               0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
             />
           </svg>
+          <span className="visually-hidden">
+            +
+          </span>
         </button>
       </div>
       <Nav as="ul" variant="px-2 flex-column" fill>

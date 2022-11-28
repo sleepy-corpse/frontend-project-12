@@ -3,7 +3,7 @@ export default {
     toasts: {
       addChannel: 'Канал создан',
       renameChannel: 'Канал переименован',
-      removeChannel: 'Канал удален',
+      removeChannel: 'Канал удалён',
       networkError: 'Ошибка соединения',
     },
     chat: {

@@ -54,7 +54,7 @@ export default {
       error: 'Неверное имя пользователя или пароль',
       signInBtn: 'Войти',
       signUpText: 'Нет аккаунта? ',
-      signUpLink: 'Зарегистрироваться',
+      signUpLink: 'Регистрация',
     },
     signUpPage: {
       header: 'Регистрация',

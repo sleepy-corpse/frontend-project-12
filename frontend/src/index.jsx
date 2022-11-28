@@ -12,6 +12,7 @@ import {
 import { io } from 'socket.io-client';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import filter from 'leo-profanity';
 import ErrorPage from './components/ErrorPage';
 import Root from './components/Root';
 import LoginPage from './components/LoginPage';
@@ -20,7 +21,7 @@ import Chat from './components/Chat';
 import store from './slices/index';
 import { actions as channelsActions } from './slices/channelsSlice';
 import { actions as messagesActions } from './slices/messagesSlice';
-import { SocketContext } from './contexts';
+import { SocketContext, FilterContext } from './contexts';
 import ru from './locales/ru';
 
 const router = createBrowserRouter([
@@ -44,6 +45,8 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+filter.loadDictionary('ru');
 
 const socket = io();
 
@@ -90,8 +93,10 @@ root.render(
       addNewMessage,
     }}
     >
-      <RouterProvider router={router} />
-      <ToastContainer />
+      <FilterContext.Provider value={filter}>
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </FilterContext.Provider>
     </SocketContext.Provider>
   </Provider>,
 );

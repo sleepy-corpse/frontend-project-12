@@ -8,10 +8,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { actions as modalActions } from '../../slices/modalSlice';
-import { useSocket } from '../../hooks';
+import { useFilter, useSocket } from '../../hooks';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 
 function AddChannelModal() {
+  const filter = useFilter();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const socket = useSocket();
@@ -48,16 +49,22 @@ function AddChannelModal() {
           })}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
-            socket.addNewChannel({ name: values.channelName, removable: true }, (err) => {
-              if (err) {
+            socket.addNewChannel(
+              {
+                name: filter.clean(values.channelName),
+                removable: true,
+              },
+              (err) => {
+                if (err) {
+                  setSubmitting(false);
+                  return;
+                }
+                resetForm();
                 setSubmitting(false);
-                return;
-              }
-              resetForm();
-              setSubmitting(false);
-              dispatch(modalActions.closeModal());
-              toast.success(t('toasts.addChannel'));
-            });
+                dispatch(modalActions.closeModal());
+                toast.success(t('toasts.addChannel'));
+              },
+            );
           }}
         >
           {(formik) => (

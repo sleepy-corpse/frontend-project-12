@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { actions as channelsActions, fetchInitialData, selectors as channelsSelectors } from '../slices/channelsSlice';
 import { selectors as messagesSelectors } from '../slices/messagesSlice';
 import { actions as modalActions } from '../slices/modalSlice';
-import { useAuth, useSocket } from '../hooks';
+import { useAuth, useFilter, useSocket } from '../hooks';
 
 function Channels() {
   const { t } = useTranslation();
@@ -120,6 +120,7 @@ function Channels() {
 }
 
 function Messages() {
+  const filter = useFilter();
   const { t } = useTranslation();
   const messages = useSelector(messagesSelectors.selectEntities);
   const selectedChannelId = useSelector((state) => state.channels.selectedChannelId);
@@ -172,7 +173,7 @@ function Messages() {
           setSubmitting(true);
           socket.addNewMessage({
             channelId: selectedChannelId,
-            body: values.messageBody,
+            body: filter.clean(values.messageBody),
             username: JSON.parse(localStorage.getItem('user')).username,
           }, (err) => {
             if (err) {

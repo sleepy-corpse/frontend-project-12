@@ -51,7 +51,7 @@ export default {
       usernamePlaceholder: 'Введите имя пользователя',
       password: 'Пароль',
       passwordPlaceholder: 'введите пароль',
-      error: 'Неверное имя пользователя или пароль',
+      error: 'Неверные имя пользователя или пароль',
       signInBtn: 'Войти',
       signUpText: 'Нет аккаунта? ',
       signUpLink: 'Регистрация',

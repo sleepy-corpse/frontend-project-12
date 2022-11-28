@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -28,7 +29,6 @@ function AddChannelModal() {
       <Modal.Header
         closeButton
         closeVariant="white"
-        className=""
       >
         <span className="fw-bold fs-4 fst-italic">
           {t('modals.add.header')}
@@ -48,10 +48,15 @@ function AddChannelModal() {
           })}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
-            socket.addNewChannel({ name: values.channelName, removable: true }, () => {
+            socket.addNewChannel({ name: values.channelName, removable: true }, (err) => {
+              if (err) {
+                setSubmitting(false);
+                return;
+              }
               resetForm();
               setSubmitting(false);
               dispatch(modalActions.closeModal());
+              toast.success(t('toasts.addChannel'));
             });
           }}
         >

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -34,9 +35,14 @@ function RemoveChannelModal() {
         <Form onSubmit={(e) => {
           e.preventDefault();
           setSubmitting(true);
-          socket.removeChannel(currentChannelId, () => {
+          socket.removeChannel(currentChannelId, (err) => {
+            if (err) {
+              setSubmitting(false);
+              return;
+            }
             setSubmitting(false);
             dispatch(modalActions.closeModal());
+            toast.success(t('toasts.removeChannel'));
           });
         }}
         >
@@ -45,7 +51,6 @@ function RemoveChannelModal() {
           </p>
           <Form.Group className="d-flex mt-2 justify-content-end">
             <Button
-              autoFocus
               type="button"
               disabled={isSubmitting}
               className="me-2 border-0"

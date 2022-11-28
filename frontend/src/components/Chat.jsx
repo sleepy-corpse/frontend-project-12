@@ -174,7 +174,11 @@ function Messages() {
             channelId: selectedChannelId,
             body: values.messageBody,
             username: JSON.parse(localStorage.getItem('user')).username,
-          }, () => {
+          }, (err) => {
+            if (err) {
+              setSubmitting(false);
+              return;
+            }
             resetForm();
             setSubmitting(false);
           });

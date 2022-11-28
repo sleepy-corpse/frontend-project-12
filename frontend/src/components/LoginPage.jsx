@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -36,14 +37,20 @@ function LoginForm() {
         username: yup.string().required(),
         password: yup.string().required(),
       })}
-      onSubmit={async (values) => {
+      onSubmit={async (values, { setSubmitting }) => {
         setIsInvalid(false);
+        setSubmitting(true);
         try {
           const resp = await axios.post(routes.loginPath(), values);
           window.localStorage.user = JSON.stringify(resp.data);
           logIn();
         } catch (error) {
+          if (error.code === 'ERR_BAD_RESPONSE') {
+            toast.error(t('toasts.networkError'));
+            return;
+          }
           setIsInvalid(true);
+          setSubmitting(false);
         }
       }}
     >
@@ -87,6 +94,7 @@ function LoginForm() {
           <Button
             className="mt-4 border-0 my-main-button mx-0"
             type="submit"
+            disabled={formik.isSubmitting}
           >
             {t('loginPage.signInBtn')}
           </Button>

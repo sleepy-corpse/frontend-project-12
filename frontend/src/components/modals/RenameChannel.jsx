@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -10,7 +11,7 @@ import { actions as modalActions } from '../../slices/modalSlice';
 import { useSocket } from '../../hooks';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 
-function MyModal() {
+function RenameChannelModal() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const socket = useSocket();
@@ -19,7 +20,15 @@ function MyModal() {
   const currentChannelId = modal.type === 'renameChannel' ? modal.extra.channelId : null;
   const channelName = modal.type === 'renameChannel' ? channels[currentChannelId].name : '';
   const channelsNames = Object.values(channels).map((channel) => channel.name);
-  const show = modal.isOpened && modal.type === 'renameChannel';
+  const show = useMemo(() => modal.isOpened && modal.type === 'renameChannel');
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (show) {
+      inputRef.current.focus();
+    }
+  }, [show]);
+
   return (
     <Modal
       show={show}
@@ -30,7 +39,6 @@ function MyModal() {
       <Modal.Header
         closeButton
         closeVariant="white"
-        className=""
       >
         <span className="fw-bold fs-4 fst-italic">
           {t('modals.rename.header')}
@@ -50,10 +58,15 @@ function MyModal() {
           })}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
-            socket.renameChannel({ id: currentChannelId, name: values.channelName }, () => {
+            socket.renameChannel({ id: currentChannelId, name: values.channelName }, (err) => {
+              if (err) {
+                setSubmitting(false);
+                return;
+              }
               resetForm();
               setSubmitting(false);
               dispatch(modalActions.closeModal());
+              toast.success(t('toasts.renameChannel'));
             });
           }}
         >
@@ -64,7 +77,6 @@ function MyModal() {
                   {t('modals.rename.header')}
                 </Form.Label>
                 <Form.Control
-                  autoFocus
                   name="channelName"
                   value={formik.values.channelName}
                   onChange={formik.handleChange}
@@ -73,6 +85,7 @@ function MyModal() {
                   placeholder={t('modals.rename.inputPlaceholder')}
                   disabled={formik.isSubmitting}
                   isInvalid={!formik.isValid}
+                  ref={inputRef}
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.channelName}
@@ -104,4 +117,4 @@ function MyModal() {
   );
 }
 
-export default MyModal;
+export default RenameChannelModal;

@@ -1,5 +1,11 @@
 export default {
   translation: {
+    toasts: {
+      addChannel: 'Канал создан',
+      renameChannel: 'Канал переименован',
+      removeChannel: 'Канал удален',
+      networkError: 'Ошибка сети',
+    },
     chat: {
       channelsHeader: 'Каналы',
       messagesCount_one: '{{count}} сообщение',

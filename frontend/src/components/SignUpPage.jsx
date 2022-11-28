@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -40,16 +41,20 @@ function SignUpForm() {
         password: yup.string().min(6, t('signUpPage.errors.passwordLength')),
         confirmPassword: yup.string().oneOf([yup.ref('password')], t('signUpPage.errors.passwordConfirm')),
       })}
-      onSubmit={async ({ login, password }) => {
+      onSubmit={async ({ login, password }, { setSubmitting }) => {
+        setSubmitting(true);
         setServerError('');
         try {
           const resp = await axios.post(routes.signupPath(), { username: login, password });
           window.localStorage.user = JSON.stringify(resp.data);
           logIn();
-        } catch (e) {
-          if (e.isAxiosError) {
-            setServerError(t('signUpPage.errors.usernameUnique'));
+        } catch (error) {
+          setSubmitting(false);
+          if (error.code === 'ERR_BAD_RESPONSE') {
+            toast.error(t('toasts.networkError'));
+            return;
           }
+          setServerError(t('signUpPage.errors.usernameUnique'));
         }
       }}
     >

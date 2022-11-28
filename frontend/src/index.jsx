@@ -1,7 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Provider } from 'react-redux';
+import 'react-toastify/dist/ReactToastify.min.css';
 import './styles.css';
+import { Provider } from 'react-redux';
 import React from 'react';
+import { ToastContainer } from 'react-toastify';
 import ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
@@ -45,10 +47,10 @@ const router = createBrowserRouter([
 
 const socket = io();
 
-const addNewChannel = (channel, callback) => socket.emit('newChannel', channel, () => callback());
-const renameChannel = (channel, callback) => socket.emit('renameChannel', channel, () => callback());
-const removeChannel = (id, callback) => socket.emit('removeChannel', { id }, () => callback());
-const addNewMessage = (message, callback) => socket.emit('newMessage', message, () => callback());
+const addNewChannel = (channel, callback) => socket.timeout(5000).emit('newChannel', channel, (err) => callback(err));
+const renameChannel = (channel, callback) => socket.timeout(5000).emit('renameChannel', channel, (err) => callback(err));
+const removeChannel = (id, callback) => socket.timeout(5000).emit('removeChannel', { id }, (err) => callback(err));
+const addNewMessage = (message, callback) => socket.timeout(5000).emit('newMessage', message, (err) => callback(err));
 
 socket.on('newChannel', (channel) => {
   store.dispatch(channelsActions.addChannel(channel));
@@ -89,6 +91,7 @@ root.render(
     }}
     >
       <RouterProvider router={router} />
+      <ToastContainer />
     </SocketContext.Provider>
   </Provider>,
 );

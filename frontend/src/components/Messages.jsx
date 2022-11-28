@@ -84,7 +84,11 @@ export default function Messages() {
           >
             <Row>
               <Col xs={12} md={10} className="mb-1">
+                <Form.Label htmlFor="messageBody" visuallyHidden>
+                  {t('chat.messageInputLabel')}
+                </Form.Label>
                 <Form.Control
+                  id="messageBody"
                   name="messageBody"
                   value={formik.values.messageBody}
                   onChange={formik.handleChange}
@@ -92,6 +96,7 @@ export default function Messages() {
                   type="text"
                   placeholder={t('chat.messageInputPlaceholder')}
                   disabled={formik.isSubmitting}
+                  aria-label="Новое сообщение"
                 />
               </Col>
               <Col>

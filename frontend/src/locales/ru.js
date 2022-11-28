@@ -13,8 +13,10 @@ export default {
       messagesCount_many: '{{count}} сообщений',
       sendBtn: 'Отправить',
       logOutBtn: 'Выйти',
+      messageInputLabel: 'Новое сообщение',
       messageInputPlaceholder: 'Введите сообщение',
       dropdown: {
+        label: 'Управление каналом',
         rename: 'Переименовать',
         delete: 'Удалить',
       },
@@ -31,7 +33,7 @@ export default {
       },
       add: {
         header: 'Добавить канал',
-        label: 'Название канала',
+        label: 'Имя канала',
         inputPlaceholder: 'Введите название канала',
       },
       errors: {

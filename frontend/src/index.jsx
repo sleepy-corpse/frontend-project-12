@@ -47,7 +47,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-filter.loadDictionary('ru');
+const ruProfanity = filter.getDictionary('ru');
+filter.add(ruProfanity);
 
 const socket = io();
 

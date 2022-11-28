@@ -55,12 +55,16 @@ export default function Channels() {
 
   const renderDropdown = (channel) => (
     <Dropdown as={ButtonGroup} className="d-flex">
-      {renderButton()}
+      {renderButton(channel)}
       <Dropdown.Toggle
         split
         variant={channel.id === selectedChannelId ? 'secondary' : ''}
         className="text-light"
-      />
+      >
+        <span className="visually-hidden">
+          {t('chat.dropdown.label')}
+        </span>
+      </Dropdown.Toggle>
       <Dropdown.Menu className="super-colors">
         <Dropdown.Item onClick={() => renameChannel(channel.id)}>{t('chat.dropdown.rename')}</Dropdown.Item>
         <Dropdown.Item onClick={() => removeChannel(channel.id)}>{t('chat.dropdown.delete')}</Dropdown.Item>

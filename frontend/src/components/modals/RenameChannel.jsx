@@ -80,10 +80,11 @@ function RenameChannelModal() {
           {(formik) => (
             <Form onSubmit={formik.handleSubmit}>
               <Form.Group>
-                <Form.Label visuallyHidden>
+                <Form.Label htmlFor="channelName" visuallyHidden>
                   {t('modals.rename.header')}
                 </Form.Label>
                 <Form.Control
+                  id="channelName"
                   name="channelName"
                   value={formik.values.channelName}
                   onChange={formik.handleChange}

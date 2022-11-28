@@ -70,11 +70,12 @@ function AddChannelModal() {
           {(formik) => (
             <Form onSubmit={formik.handleSubmit}>
               <Form.Group>
-                <Form.Label visuallyHidden>
+                <Form.Label htmlFor="channelName" visuallyHidden>
                   {t('modals.add.label')}
                 </Form.Label>
                 <Form.Control
                   autoFocus
+                  id="channelName"
                   name="channelName"
                   value={formik.values.channelName}
                   onChange={formik.handleChange}

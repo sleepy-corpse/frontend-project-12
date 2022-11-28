@@ -40,30 +40,6 @@ export default function Channels() {
     dispatch(channelsActions.switchChannel(id));
   };
 
-  const renderDropdown = (channel) => (
-    <Dropdown as={ButtonGroup} className="d-flex">
-      <Button
-        variant={channel.id === selectedChannelId ? 'secondary' : ''}
-        className="w-100 text-light text-truncate rounded-0 text-start"
-        onClick={handleChannelSwitch(channel.id)}
-      >
-        <span className="me-1">
-          {'# '}
-        </span>
-        {channel.name}
-      </Button>
-      <Dropdown.Toggle
-        split
-        variant={channel.id === selectedChannelId ? 'secondary' : ''}
-        className="text-light"
-      />
-      <Dropdown.Menu className="super-colors">
-        <Dropdown.Item onClick={() => renameChannel(channel.id)}>{t('chat.dropdown.rename')}</Dropdown.Item>
-        <Dropdown.Item onClick={() => removeChannel(channel.id)}>{t('chat.dropdown.delete')}</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-  );
-
   const renderButton = (channel) => (
     <Button
       variant={channel.id === selectedChannelId ? 'secondary' : ''}
@@ -75,6 +51,21 @@ export default function Channels() {
       </span>
       {channel.name}
     </Button>
+  );
+
+  const renderDropdown = (channel) => (
+    <Dropdown as={ButtonGroup} className="d-flex">
+      {renderButton()}
+      <Dropdown.Toggle
+        split
+        variant={channel.id === selectedChannelId ? 'secondary' : ''}
+        className="text-light"
+      />
+      <Dropdown.Menu className="super-colors">
+        <Dropdown.Item onClick={() => renameChannel(channel.id)}>{t('chat.dropdown.rename')}</Dropdown.Item>
+        <Dropdown.Item onClick={() => removeChannel(channel.id)}>{t('chat.dropdown.delete')}</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
   );
 
   return (

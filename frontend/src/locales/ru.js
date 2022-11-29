@@ -74,5 +74,9 @@ export default {
         passwordConfirm: 'Пароли должны совпадать',
       },
     },
+    errorPage: {
+      main: 'Ошибка',
+      wrongPath: 'Страница не найдена',
+    },
   },
 };

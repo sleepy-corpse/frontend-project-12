@@ -20,7 +20,6 @@ export default function Chat() {
   const { t } = useTranslation();
   useEffect(() => {
     const fetchInitialData = async () => {
-      console.log(1);
       const { token } = JSON.parse(localStorage.getItem('user'));
       const AuthHeader = {
         Authorization: `Bearer ${token}`,
@@ -32,10 +31,8 @@ export default function Chat() {
         dispatch(channelsActions.initChannels(response.data));
       } catch (err) {
         if (err.isAxiosError && err.response.status === 401) {
-          console.log(err);
           logOut();
         } else {
-          console.log(err);
           toast.error(t('toasts.networkError'));
         }
       }

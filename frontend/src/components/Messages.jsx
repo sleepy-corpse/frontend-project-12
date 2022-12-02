@@ -1,4 +1,4 @@
-import { React, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Col from 'react-bootstrap/Col';
@@ -15,14 +15,29 @@ export default function Messages() {
   const filter = useFilter();
   const { t } = useTranslation();
   const messages = useSelector(messagesSelectors.selectEntities);
+  const lastId = useSelector(messagesSelectors.selectIds).at(-1);
+  const lastMsg = messages[lastId];
   const selectedChannelId = useSelector((state) => state.channels.selectedChannelId);
   const selectedChannel = useSelector(channelsSelectors.selectEntities)[selectedChannelId];
+  const currentMessages = Object.values(messages)
+    .filter(({ channelId }) => channelId === selectedChannelId)
+    .map((msg) => (
+      <div className="text-break mb-2" key={msg.id}>
+        <b>
+          {msg.username}
+        </b>
+        {`: ${msg.body}`}
+      </div>
+    ));
+  const messagesCount = currentMessages.length;
 
   const socket = useSocket();
   const messagesBox = useRef(null);
 
   useEffect(() => {
-    messagesBox.current.scrollTop = messagesBox.current.scrollHeight;
+    if (lastMsg && lastMsg.channelId === selectedChannelId) {
+      messagesBox.current.scrollTop = messagesBox.current.scrollHeight;
+    }
   }, [messages]);
 
   return (
@@ -31,28 +46,17 @@ export default function Messages() {
         <p className="m-0">
           {'# '}
           <span>
-            {selectedChannel.name}
+            {selectedChannel ? selectedChannel.name : ''}
           </span>
         </p>
         <span>
           {t('chat.messagesCount', {
-            count: Object.values(messages)
-              .filter(({ channelId }) => channelId === selectedChannelId)
-              .length,
+            count: messagesCount,
           })}
         </span>
       </div>
       <div ref={messagesBox} id="messages-box" className="chat-messages h-100 overflow-auto px-5 ">
-        {Object.values(messages)
-          .filter(({ channelId }) => channelId === selectedChannelId)
-          .map((msg) => (
-            <div className="text-break mb-2" key={msg.id}>
-              <b>
-                {msg.username}
-              </b>
-              {`: ${msg.body}`}
-            </div>
-          ))}
+        {currentMessages}
       </div>
       <Formik
         initialValues={{

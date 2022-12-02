@@ -50,7 +50,7 @@ function App() {
 
   const socket = io();
 
-  const addNewChannel = (channel, callback) => socket.timeout(5000).emit('newChannel', channel, (err) => callback(err));
+  const addNewChannel = (channel, callback) => socket.timeout(5000).emit('newChannel', channel, (err, response) => callback(err, response));
   const renameChannel = (channel, callback) => socket.timeout(5000).emit('renameChannel', channel, (err) => callback(err));
   const removeChannel = (id, callback) => socket.timeout(5000).emit('removeChannel', { id }, (err) => callback(err));
   const addNewMessage = (message, callback) => socket.timeout(5000).emit('newMessage', message, (err) => callback(err));

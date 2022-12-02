@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 import { actions as modalActions } from '../../slices/modalSlice';
 import { useFilter, useSocket } from '../../hooks';
-import { selectors as channelsSelectors } from '../../slices/channelsSlice';
+import { actions as channelsActions, selectors as channelsSelectors } from '../../slices/channelsSlice';
 
 function AddChannelModal() {
   const filter = useFilter();
@@ -54,13 +54,14 @@ function AddChannelModal() {
                 name: filter.clean(values.channelName),
                 removable: true,
               },
-              (err) => {
+              (err, response) => {
                 if (err) {
                   setSubmitting(false);
                   return;
                 }
                 resetForm();
                 setSubmitting(false);
+                dispatch(channelsActions.switchChannel(response.data.id));
                 dispatch(modalActions.closeModal());
                 toast.success(t('toasts.addChannel'));
               },

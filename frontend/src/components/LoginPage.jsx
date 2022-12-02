@@ -64,10 +64,9 @@ function LoginForm() {
           >
             {t('loginPage.header')}
           </div>
-          <Form.Group className="position-relative">
-            <Form.Label htmlFor="username" className="fw-bold fs-4 fst-italic text-light">{t('loginPage.username')}</Form.Label>
+          <Form.Group controlId="username" className="position-relative">
+            <Form.Label className="fw-bold fs-4 fst-italic text-light">{t('loginPage.username')}</Form.Label>
             <Form.Control
-              id="username"
               name="username"
               value={formik.values.username}
               onChange={formik.handleChange}
@@ -78,10 +77,9 @@ function LoginForm() {
               isInvalid={isInvalid}
             />
           </Form.Group>
-          <Form.Group className="mt-2 position-relative" controlId="validationFormik05" md="3">
-            <Form.Label htmlFor="password" className="fw-bold fs-4 fst-italic text-light">{t('loginPage.password')}</Form.Label>
+          <Form.Group className="mt-2 position-relative" controlId="password" md="3">
+            <Form.Label className="fw-bold fs-4 fst-italic text-light">{t('loginPage.password')}</Form.Label>
             <Form.Control
-              id="password"
               name="password"
               value={formik.values.password}
               onChange={formik.handleChange}

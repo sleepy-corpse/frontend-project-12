@@ -68,10 +68,9 @@ function SignUpForm() {
           >
             {t('signUpPage.header')}
           </div>
-          <Form.Group className="position-relative">
-            <Form.Label htmlFor="login" className="fw-bold fs-5 fst-italic text-light">{t('signUpPage.username')}</Form.Label>
+          <Form.Group controlId="login" className="position-relative">
+            <Form.Label className="fw-bold fs-5 fst-italic text-light">{t('signUpPage.username')}</Form.Label>
             <Form.Control
-              id="login"
               name="login"
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -83,10 +82,9 @@ function SignUpForm() {
             />
             <Form.Control.Feedback tooltip type="invalid">{formik.errors.login || serverError}</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className="mt-2 position-relative">
-            <Form.Label htmlFor="password" className="fw-bold fs-5 fst-italic text-light">{t('signUpPage.password')}</Form.Label>
+          <Form.Group controlId="password" className="mt-2 position-relative">
+            <Form.Label className="fw-bold fs-5 fst-italic text-light">{t('signUpPage.password')}</Form.Label>
             <Form.Control
-              id="password"
               name="password"
               value={formik.values.password}
               onChange={formik.handleChange}
@@ -98,10 +96,9 @@ function SignUpForm() {
             />
             <Form.Control.Feedback tooltip type="invalid">{formik.errors.password}</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className="mt-2 position-relative">
-            <Form.Label htmlFor="confirmPassword" className="fw-bold fs-5 fst-italic text-light">{t('signUpPage.confirmPassword')}</Form.Label>
+          <Form.Group controlId="confirmPassword" className="mt-2 position-relative">
+            <Form.Label className="fw-bold fs-5 fst-italic text-light">{t('signUpPage.confirmPassword')}</Form.Label>
             <Form.Control
-              id="confirmPassword"
               name="confirmPassword"
               value={formik.values.confirmPassword}
               onChange={formik.handleChange}

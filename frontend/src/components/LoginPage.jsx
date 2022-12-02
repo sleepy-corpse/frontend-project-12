@@ -17,7 +17,7 @@ export default function LoginPage() {
     <Container
       className="d-flex align-items-center justify-content-center h-100"
     >
-      {isLoggedIn ? <Navigate to="/" /> : <LoginForm />}
+      {isLoggedIn ? <Navigate to={routes.rootPage()} /> : <LoginForm />}
     </Container>
   );
 }
@@ -101,7 +101,7 @@ function LoginForm() {
           <div className="mt-4 text-light text-center border-top border-3 mx-0">
             <p className="mb-0 mt-3">
               {t('loginPage.signUpText')}
-              <a href="/signup">{t('loginPage.signUpLink')}</a>
+              <a href={routes.signupPage()}>{t('loginPage.signUpLink')}</a>
             </p>
           </div>
         </Form>

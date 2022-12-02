@@ -18,7 +18,7 @@ export default function SignUpPage() {
     <Container
       className="d-flex align-items-center justify-content-center h-100"
     >
-      {isLoggedIn ? <Navigate to="/" /> : <SignUpForm />}
+      {isLoggedIn ? <Navigate to={routes.rootPage()} /> : <SignUpForm />}
     </Container>
   );
 }

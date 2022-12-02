@@ -20,25 +20,26 @@ import { actions as channelsActions } from './slices/channelsSlice';
 import { actions as messagesActions } from './slices/messagesSlice';
 import { SocketContext, FilterContext } from './contexts';
 import ru from './locales/ru';
+import routes from './routes';
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: routes.rootPage(),
       element: <Root />,
       errorElement: <ErrorPage />,
       children: [
         {
           element: <LoginPage />,
-          path: 'login',
+          path: routes.loginPage(),
         },
         {
           element: <SignUpPage />,
-          path: 'signup',
+          path: routes.signupPage(),
         },
         {
           element: <Chat />,
-          path: '/',
+          path: routes.rootPage(),
         },
       ],
     },

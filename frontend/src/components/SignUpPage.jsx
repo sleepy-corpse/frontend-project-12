@@ -78,6 +78,7 @@ function SignUpForm() {
               type="text"
               placeholder={t('signUpPage.usernamePlaceholder')}
               required
+              disabled={formik.isSubmitting}
               isInvalid={(formik.touched.login && formik.errors.login) || serverError}
             />
             <Form.Control.Feedback tooltip type="invalid">{formik.errors.login || serverError}</Form.Control.Feedback>
@@ -92,6 +93,7 @@ function SignUpForm() {
               type="password"
               placeholder={t('signUpPage.passwordPlaceholder')}
               required
+              disabled={formik.isSubmitting}
               isInvalid={formik.touched.password && formik.errors.password}
             />
             <Form.Control.Feedback tooltip type="invalid">{formik.errors.password}</Form.Control.Feedback>
@@ -106,6 +108,7 @@ function SignUpForm() {
               type="password"
               placeholder={t('signUpPage.confirmPlaceholder')}
               required
+              disabled={formik.isSubmitting}
               isInvalid={formik.touched.confirmPassword && formik.errors.confirmPassword}
             />
             <Form.Control.Feedback tooltip type="invalid">{formik.errors.confirmPassword}</Form.Control.Feedback>
@@ -114,6 +117,7 @@ function SignUpForm() {
             <Button
               className="mt-3 border-0 my-main-button"
               type="submit"
+              disabled={formik.isSubmitting}
             >
               {t('signUpPage.signUpBtn')}
             </Button>

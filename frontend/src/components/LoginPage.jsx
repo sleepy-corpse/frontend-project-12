@@ -75,6 +75,7 @@ function LoginForm() {
               type="text"
               placeholder={t('loginPage.usernamePlaceholder')}
               required
+              disabled={formik.isSubmitting}
               isInvalid={isInvalid}
             />
           </Form.Group>
@@ -88,6 +89,7 @@ function LoginForm() {
               type="password"
               placeholder={t('loginPage.passwordPlaceholder')}
               required
+              disabled={formik.isSubmitting}
               isInvalid={isInvalid}
             />
             <Form.Control.Feedback tooltip type="invalid">{t('loginPage.error')}</Form.Control.Feedback>

@@ -30,7 +30,7 @@ function Root() {
   const authContext = useMemo(() => ({ isLoggedIn, logIn, logOut }), [isLoggedIn]);
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn && window.location.pathname !== routes.signupPage()) {
       navigate(routes.loginPage());
     }
   }, [isLoggedIn]);

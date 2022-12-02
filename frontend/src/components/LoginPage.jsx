@@ -13,6 +13,7 @@ import { useAuth } from '../hooks';
 
 export default function LoginPage() {
   const { isLoggedIn } = useAuth();
+  console.log(`loginPage: ${isLoggedIn}`);
   return (
     <Container
       className="d-flex align-items-center justify-content-center h-100"

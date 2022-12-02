@@ -1,30 +1,19 @@
 /* eslint-disable no-param-reassign */
-import axios from 'axios';
-import { createSlice, createEntityAdapter, createAsyncThunk } from '@reduxjs/toolkit';
-import routes from '../routes';
-
-export const fetchInitialData = createAsyncThunk(
-  'channels/fetchInitialData',
-  async () => {
-    const { token } = JSON.parse(localStorage.getItem('user'));
-    const AuthHeader = {
-      Authorization: `Bearer ${token}`,
-    };
-    const response = await axios.get(routes.dataPath(), {
-      headers: AuthHeader,
-    });
-    return response.data;
-  },
-);
+import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 
 const channelsAdapter = createEntityAdapter();
+const initialState = { channels: channelsAdapter.getInitialState(), selectedChannelId: null };
 
 const slice = createSlice({
   name: 'channels',
-  initialState: { channels: channelsAdapter.getInitialState(), selectedChannelId: null },
+  initialState,
   reducers: {
     switchChannel: (state, { payload }) => {
       state.selectedChannelId = payload;
+    },
+    initChannels: (state, { payload }) => {
+      state.selectedChannelId = payload.currentChannelId;
+      channelsAdapter.addMany(state.channels, payload.channels);
     },
     addChannel: (state, { payload }) => {
       channelsAdapter.addOne(state.channels, payload);
@@ -36,13 +25,7 @@ const slice = createSlice({
     removeChannel: (state, { payload }) => {
       channelsAdapter.removeOne(state.channels, payload.id);
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchInitialData.fulfilled, (state, { payload }) => {
-        state.selectedChannelId = payload.currentChannelId;
-        channelsAdapter.addMany(state.channels, payload.channels);
-      });
+    reset: () => initialState,
   },
 });
 

@@ -90,7 +90,7 @@ function App() {
     });
 
   const rollbarConfig = {
-    accessToken: '236e6ae97b1a476ab11467917dd9df5c',
+    accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
     environment: 'production',
     captureUncaught: true,
     captureUnhandledRejections: true,
